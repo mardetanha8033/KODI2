@@ -135,6 +135,7 @@ WEBSITES = { 'AKOAM'		:['https://akoam.net']
 			,'ALKAWTHAR'	:['https://www.alkawthartv.com']
 			,'ALMAAREF'		:['http://www.almaareftv.com/old','http://www.almaareftv.com']
 			,'ARABLIONZ'	:['http://arablionz.com']
+			,'BOKRA'		:['http://shoofvod.com','https://shahidlive.co']
 			,'HELAL'		:['https://4helal.me']	#4helal.tv #4helal.cc
 			,'IFILM'		:['http://ar.ifilmtv.com','http://en.ifilmtv.com','http://fa.ifilmtv.com','http://fa2.ifilmtv.com']
 			,'PANET'		:['http://www.panet.co.il']
@@ -146,6 +147,7 @@ WEBSITES = { 'AKOAM'		:['https://akoam.net']
 			,'CIMANOW'		:['https://cima-now.com']
 			,'SHIAVOICE'	:['https://shiavoice.com']
 			,'KARBALATV'	:['https://karbala-tv.net']
+			,'MYCIMA'		:['https://mycima.co']
 			#,'EGYBESTVIP'	:['https://egybest.vip']
 			#,'EGYBEST'		:['https://egy.best']
 			#,'EGY4BEST'	:['https://egybest.vip']
@@ -299,6 +301,8 @@ def MAIN_DISPATCHER(type,name,url,mode,image,page,text,context):
 	elif mode2==33: import DOWNLOAD		; results = DOWNLOAD.MAIN(mode,url,context)
 	elif mode2==34: import SERVICES 	; results = SERVICES.MAIN(mode,text)
 	elif mode2==35: import AKOAMCAM		; results = AKOAMCAM.MAIN(mode,url,text)
+	elif mode2==36: import MYCIMA		; results = MYCIMA.MAIN(mode,url,text)
+	elif mode2==37: import BOKRA		; results = BOKRA.MAIN(mode,url,text)
 	return results
 
 def LOG_MENU_LABEL(script_name,label,mode,path):
@@ -890,6 +894,7 @@ def OPENURL_REQUESTS(method,url,data,headers,allow_redirects,showDialogs,source,
 	except: pass
 	code = int(code)
 	response2 = dummy_object()
+	#DIALOG_OK('OPENURL_REQUESTS',str(response.content))
 	if succeeded:
 		response2.headers = response.headers
 		response2.cookies = response.cookies
@@ -932,7 +937,7 @@ def OPENURL_REQUESTS(method,url,data,headers,allow_redirects,showDialogs,source,
 			if response3.succeeded: response2 = response3
 			else: LOG_THIS('ERROR',LOGGING(script_name)+'   SSL failed   Code: [ '+str(code)+' ]   Reason: [ '+reason+' ]   Source: [ '+source+' ]   URL: [ '+url+' ]')
 		if not response2.succeeded and 'google-analytics' not in url and (allow_dns_fix or allow_proxy_fix):
-			LOG_THIS('ERROR',LOGGING(script_name)+'   Direct connection failed   Will try fixing this   Code: [ '+str(code)+' ]   Reason: [ '+reason+' ]   Source: [ '+source+' ]   URL: [ '+url+' ]')
+			LOG_THIS('ERROR',LOGGING(script_name)+'   Direct connection failed   Code: [ '+str(code)+' ]   Reason: [ '+reason+' ]   Source: [ '+source+' ]   URL: [ '+url+' ]')
 			if proxy_status=='ASK' or dns_status=='ASK':
 				yes = SHOW_NETWORK_ERRORS(code,reason,source,True)
 			else: yes = True
@@ -1053,7 +1058,7 @@ def mixARABIC(string):
 	new_string = new_string.encode('utf-8')
 	return new_string
 
-def KEYBOARD(header='لوحة المفاتيح',default=''):
+def KEYBOARD(header='لوحة المفاتيح',default='',allow_empty=False):
 	#text = ''
 	#kb = xbmc.Keyboard(default,header)
 	#keyboard.setDefault(default)
@@ -1074,11 +1079,13 @@ def KEYBOARD(header='لوحة المفاتيح',default=''):
 	#text = dialog.getControl(312).getLabel()
 	#del dialog
 	text = DIALOG_INPUT(header,default,type=xbmcgui.INPUT_ALPHANUM)
-	text = text.strip(' ')
-	if len(text.decode('utf8'))<1:
+	text = text.replace('  ',' ').replace('  ',' ').replace('  ',' ')
+	if text=='' and not allow_empty:
 		DIALOG_OK('رسالة من المبرمج','تم إلغاء الإدخال')
 		return ''
-	text = mixARABIC(text)
+	if text not in ['',' ']:
+		text = text.strip(' ')
+		text = mixARABIC(text)
 	return text
 
 def ADD_TO_LAST_VIDEO_FILES():
@@ -1274,16 +1281,36 @@ def DNS_RESOLVER(url,dns_server):
 	return answer
 
 def RATING_CHECK(script_name,url,ratingLIST):
-	#DIALOG_OK(url,str(ratingLIST))
-	if ratingLIST:
-		blockedLIST = ['R','MA','16','17','18','كبار']
-		cond1 = any(value in ratingLIST[0] for value in blockedLIST)
-		cond2 = 'not rated' not in ratingLIST[0].lower()
-		if cond1 and cond2:
-			LOG_THIS('ERROR',LOGGING(script_name)+'   Blocked adults video   URL: [ '+url+' ]')
-			DIALOG_NOTIFICATION('رسالة من المبرمج','الفيديو للكبار فقط وأنا منعته',sound=False)
-			return True
+	if PRIVILEGED('__ALLOW_RESTRUCTED__'): return False
+	elif ratingLIST:
+		if script_name=='BOKRA': blockedLIST = ['كبار']
+		else: blockedLIST = ['r','ma','16','17','18','كبار','adult']
+		for rating in ratingLIST:
+			rating = rating.lower().decode('utf8').encode('utf8')
+			cond1 = any(value in rating for value in blockedLIST)
+			cond2 = 'not rated' not in rating
+			if cond1 and cond2:
+				LOG_THIS('ERROR',LOGGING(script_name)+'   Blocked adults video   URL: [ '+url+' ]')
+				DIALOG_NOTIFICATION('رسالة من المبرمج','الفيديو للكبار فقط وأنا منعته',sound=False)
+				return True
 	return False
+	"""
+		found = False
+		for rating in ratingLIST:
+			rating = rating.lower().decode('utf8').encode('utf8')
+			#DIALOG_OK('',rating)
+			for blocked in blockedLIST:
+				if len(blocked)<=2: blocked = '_'+blocked+'_'
+				found = re.findall('[ -:_=\'\"\|]'+blocked+'[ -:_=\'\"\|]',rating,re.DOTALL)
+				#DIALOG_OK(rating,str(found))
+				if found: break
+			if found: break
+	if found:
+		LOG_THIS('ERROR',LOGGING(script_name)+'   Blocked adults video   URL: [ '+url+' ]')
+		DIALOG_NOTIFICATION('رسالة من المبرمج','الفيديو للكبار فقط وأنا منعته',sound=False)
+		return True
+	return False
+	"""
 
 """
 #inputstream.adaptive:	mpd, hls, ism
@@ -1442,6 +1469,8 @@ def TRANSLATE(text):
 	,'SHIAVOICE'	:'موقع صوت الشيعة'
 	,'KARBALATV'	:'موقع قناة كربلاء'
 	,'YTB_CHANNELS'	:'مواقع يوتيوب'
+	,'MYCIMA'		:'موقع ماي سيما'
+	,'BOKRA'		:'موقع بكرا'
 	,'LIVETV'		:'ملف'
 	,'IPTV'			:'ملف'
 	,'LIBRARY'		:'ملف'
@@ -1454,7 +1483,8 @@ def TRANSLATE(text):
 	if text in dict.keys(): return dict[text]
 	return ''
 
-def PLAY_VIDEO(url3,website='',type='video'):
+def PLAY_VIDEO(url3,website='',type=''):
+	if type=='': type = 'video'
 	#DIALOG_OK(url3,website)
 	#url3 = unescapeHTML(url3)
 	result,subtitlemessage,httpd = 'canceled0','',''
@@ -1491,6 +1521,7 @@ def PLAY_VIDEO(url3,website='',type='video'):
 				else: url = url+'&User-Agent=&'
 	LOG_THIS('NOTICE',LOGGING(script_name)+'   Got final url   URL: [ '+url+' ]')
 	play_item = xbmcgui.ListItem()
+	#play_item = xbmcgui.ListItem('test')
 	type99,name,url99,mode99,image,page99,text99,context = EXTRACT_KODI_PATH()
 	if website not in ['DOWNLOAD','IPTV']:
 		#play_item = xbmcgui.ListItem(path=url)
@@ -1527,6 +1558,10 @@ def PLAY_VIDEO(url3,website='',type='video'):
 	if type=='video' and not context.startswith('6'):
 		#title = xbmc.getInfoLabel('ListItem.Title')
 		#play_item.setInfo('Video', {'duration': 3600})
+		#xbmcplugin.setContent(addon_handle,'videos')
+		#play_item.setInfo('video',{'mediatype':'video'})
+		#play_item.setProperty('IsPlayable','true')
+		#play_item.setInfo(type='Video',infoLabels={"Title":'Title'})
 		play_item.setPath(url)
 		LOG_THIS('NOTICE',LOGGING(script_name)+'   Playing video file using setResolvedUrl()   URL: [ '+url+' ]')
 		xbmcplugin.setResolvedUrl(addon_handle,True,play_item)
@@ -1713,5 +1748,16 @@ def HANDLE_EXIT_ERRORS(error):
 		else: file,lineno,function = 'مجهول','مجهول','مجهول'
 		DIALOG_NOTIFICATION('خطأ '+function+' '+lineno+' '+file,error_line,time=2000)
 	return
+
+def PRIVILEGED(priv):
+	settings = xbmcaddon.Addon(id=addon_id)
+	privs = settings.getSetting('user.privs')
+	priv = priv.encode('base64').replace('\n','')
+	user = dummyClientID(32)
+	md5 = hashlib.md5(priv+user).hexdigest()[0:32]
+	if md5 in privs: return True
+	return False
+
+
 
 
