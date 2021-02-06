@@ -59,7 +59,6 @@ def MENU(website=''):
 	for link,title in items:
 		#if title not in ignoreLIST: addMenuItem('folder',website+'___'+menu_name+title,link,122,'','1')
 		if not link.endswith('/'): addMenuItem('folder',website+'___'+menu_name+title,link,122,'','1')
-	if website=='': addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
 	return html
 
 def FILTERS_MENU(link):
@@ -268,7 +267,6 @@ def PLAY(url):
 def GET_USERNAME_PASSWORD():
 	text = 'هذا الموقع يحتاج اسم دخول وكلمة السر لكي تستطيع تشغيل ملفات الفيديو. للحصول عليهم قم بفتح حساب مجاني من الموقع الاصلي'
 	DIALOG_OK('الموقع الاصلي  '+website0a,text)
-	settings = xbmcaddon.Addon(id=addon_id)
 	oldusername = settings.getSetting('egybest.user')
 	oldpassword = settings.getSetting('egybest.pass')
 	xbmc.executebuiltin('Addon.OpenSettings(%s)' %addon_id, True)
@@ -281,7 +279,6 @@ def GET_USERNAME_PASSWORD():
 	return
 
 def GET_PLAY_TOKENS():
-	settings = xbmcaddon.Addon(id=addon_id)
 	EGUDI = settings.getSetting('egybest.EGUDI')
 	EGUSID = settings.getSetting('egybest.EGUSID')
 	EGUSS = settings.getSetting('egybest.EGUSS')

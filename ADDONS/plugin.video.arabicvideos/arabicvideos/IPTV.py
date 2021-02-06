@@ -58,13 +58,11 @@ def MENU():
 	addMenuItem('link','[COLOR FFC89008]IPT  [/COLOR]'+'جلب ملفات IPTV','',232)
 	addMenuItem('link','[COLOR FFC89008]IPT  [/COLOR]'+'مسح ملفات IPTV','',237)
 	addMenuItem('link','[COLOR FFC89008]IPT  [/COLOR]'+'تغيير IPTV User-Agent','',280)
-	addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
 	return
 
 def CHECK_ACCOUNT(showDialog=True):
 	#if not isIPTVFiles(True): return
 	ok,status = False,''
-	settings = xbmcaddon.Addon(id=addon_id)
 	useragent = settings.getSetting('iptv.useragent')
 	#DIALOG_OK('CHECK_ACCOUNT 1','['+useragent+']')
 	iptvURL = settings.getSetting('iptv.url')
@@ -80,7 +78,7 @@ def CHECK_ACCOUNT(showDialog=True):
 		settings.setSetting('iptv.password',password)
 		settings.setSetting('iptv.server',server)
 		url = server+'/player_api.php?username='+username+'&password='+password
-		response = OPENURL_REQUESTS_CACHED(NO_CACHE,'GET',url,'',headers,False,'','IPTV-CHECK_ACCOUNT-1st')
+		response = OPENURL_REQUESTS_CACHED(NO_CACHE,'GET',url,'',headers,False,False,'IPTV-CHECK_ACCOUNT-1st')
 		html = response.content
 		if response.succeeded:
 			timediff,time_now,created_at,exp_date = 0,'','',''
@@ -119,10 +117,10 @@ def CHECK_ACCOUNT(showDialog=True):
 				if status=='Active': DIALOG_TEXTVIEWER('الاشتراك يعمل بدون مشاكل',message)
 				else: DIALOG_TEXTVIEWER('يبدو أن هناك مشكلة في الاشتراك',message)
 	if iptvURL and ok and status=='Active':
-		LOG_THIS('NOTICE','Checking IPTV URL   [ IPTV account is OK ]   [ '+iptvURL+' ]')
+		LOG_THIS('NOTICE','.   Checking IPTV URL   [ IPTV account is OK ]   [ '+iptvURL+' ]')
 		succeeded = True
 	else:
-		LOG_THIS('ERROR','Checking IPTV URL   [ Does not work ]   [ '+iptvURL+' ]')
+		LOG_THIS('ERROR_LINES','Checking IPTV URL   [ Does not work ]   [ '+iptvURL+' ]')
 		if showDialog: DIALOG_OK('فحص اشتراك IPTV','رابط اشتراك IPTV الذي قمت انت بإضافته إلى البرنامج لا يعمل أو الرابط غير موجود في البرنامج . أذهب إلى قائمة اشتراك IPTV وقم بإضافة رابط IPTV جديد أو قم بإصلاح الرابط القديم')
 		succeeded = False
 	return succeeded
@@ -211,7 +209,6 @@ def ITEMS(TYPE,GROUP):
 	return
 
 def EPG_ITEMS(url,function):
-	settings = xbmcaddon.Addon(id=addon_id)
 	useragent = settings.getSetting('iptv.useragent')
 	headers = {'User-Agent':useragent}
 	if not isIPTVFiles(True): return
@@ -294,7 +291,6 @@ def EPG_ITEMS(url,function):
 	return epg_list
 
 def PLAY(url,type):
-	settings = xbmcaddon.Addon(id=addon_id)
 	useragent = settings.getSetting('iptv.useragent')
 	if useragent!='': url = url+'|User-Agent='+useragent
 	"""
@@ -310,7 +306,6 @@ def PLAY(url,type):
 	return
 
 def ADD_USERAGENT():
-	settings = xbmcaddon.Addon(id=addon_id)
 	DIALOG_OK('رسالة من المبرمج','تحذير مهم وهام جدا . يرجى عدم تغييره إذا كنت لا تعرف ما هو .  وعدم تغييره إلا عند الضرورة القصوى . الحاجة لهذا التغيير هي فقط إذا طلبت منك شركة IPTV أن تعمل هذا التغيير . وفقط عندما تستخدم خدمة IPTV تحتاج User-Agent خاص')
 	useragent = settings.getSettingString('iptv.useragent')
 	answer = DIALOG_YESNO(useragent,'هذا هو IPTV User-Agent المسجل في البرنامج . هل تريد تعديله أم تريد إعادته إلى وضعية التثبيت الأصلي والتي تقريبا تناسب جميع شركات IPTV ؟!','','','استخدام الأصلي','تعديل القديم')
@@ -329,7 +324,6 @@ def ADD_USERAGENT():
 	return
 
 def ADD_ACCOUNT():
-	settings = xbmcaddon.Addon(id=addon_id)
 	answer = DIALOG_YESNO('رسالة من المبرمج','البرنامج يحتاج اشتراك IPTV من نوع رابط التحميل m3u من أي شركة IPTV والأفضل أن يحتوي الرابط في نهايته على هذه الكلمات\n\r&type=m3u_plus\n\rهل تريد تغيير الرابط الآن ؟','','','كلا','نعم')
 	if not answer: return
 	iptvURL = settings.getSetting('iptv.url')
@@ -466,21 +460,20 @@ def SPLIT_NAME(title):
 
 def CREATE_STREAMS(showDialogs=True):
 	#DIALOG_OK('CREATE_STREAMS 1','['+useragent+']')
-	settings = xbmcaddon.Addon(id=addon_id)
 	useragent = settings.getSettingString('iptv.useragent')
 	iptvURL = settings.getSetting('iptv.url')
 	headers = {'User-Agent':useragent}
 	ok = CHECK_ACCOUNT(False)
 	if not ok:
 		DIALOG_OK('رسالة من المبرمج','فشل بسحب ملفات IPTV . أحتمال رابط IPTV غير صحيح أو انت لم تستخدم سابقا خدمة IPTV الموجودة بالبرنامج . هذه الخدمة تحتاج اشتراك مدفوع وصحيح ويجب أن تضيفه بنفسك للبرنامج باستخدام قائمة IPTV الموجودة بهذا البرنامج')
-		if iptvURL=='': LOG_THIS('ERROR',LOGGING(script_name)+'   No IPTV URL found to download IPTV files')
-		else: LOG_THIS('ERROR',LOGGING(script_name)+'   Failed to download IPTV files')
+		if iptvURL=='': LOG_THIS('ERROR_LINES',LOGGING(script_name)+'   No IPTV URL found to download IPTV files')
+		else: LOG_THIS('ERROR_LINES',LOGGING(script_name)+'   Failed to download IPTV files')
 		return
 	#DIALOG_NOTIFICATION('IPTV','جلب ملفات جديدة')
 	#DIALOG_BUSY('start')
 	#LOG_THIS('NOTICE','EMAD 111')
 	if showDialogs:
-		yes = DIALOG_YESNO('رسالة من المبرمج','هل تريد أن تجلب الآن ملفات IPTV جديدة ؟','','','كلا','نعم')
+		yes = DIALOG_YESNO('رسالة من المبرمج','عملية جلب ملفات IPTV جديدة قد تحتاج عدة دقائق . هل تريد أن تجلب الملفات الآن ؟','','','كلا','نعم')
 		if not yes:
 			#DIALOG_BUSY('stop')
 			return
@@ -583,7 +576,7 @@ def CREATE_STREAMS(showDialogs=True):
 		dict = {}
 		i = i+1
 		if pDialog.iscanceled(): return
-		pDialog.update(50+int(25*i/length),'قراءة الملفات الجديدة:- الفيديو رقم',str(i)+'/'+str(length))
+		if i%31==0: pDialog.update(50+int(25*i/length),'قراءة الملفات الجديدة:- الفيديو رقم',str(i)+'/'+str(length))
 		line = line.replace('\r','').replace('\n','')
 		if 'http' not in line: continue
 		line,url = line.rsplit('http',1)

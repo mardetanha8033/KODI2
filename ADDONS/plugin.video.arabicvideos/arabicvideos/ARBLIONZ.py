@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from LIBRARY import *
 
-script_name='ARABLIONZ'
+script_name='ARBLIONZ'
 headers = { 'User-Agent' : '' }
 menu_name='_ARL_'
 website0a = WEBSITES[script_name][0]
-ignoreLIST = ['عروض المصارعة','الكل','رياضة و مصارعه','مسلسلات انمي مترجمة','الرئيسية']
+ignoreLIST = ['عروض المصارعة','الكل','رياضة و مصارعه','الرئيسية','العاب','برامج كمبيوتر','موبايل و جوال','القسم الاسلامي']
 
 def MAIN(mode,url,text):
 	#LOG_MENU_LABEL(script_name,menu_label,mode,menu_path)
@@ -22,11 +22,11 @@ def MAIN(mode,url,text):
 def MENU(website=''):
 	if website=='':
 		addMenuItem('folder',menu_name+'بحث في الموقع','',209,'','','_REMEMBERRESULTS_')
-		#addMenuItem('folder',menu_name+'فلتر محدد',website0a,205)
-		#addMenuItem('folder',menu_name+'فلتر كامل',website0a,204)
+		addMenuItem('folder',menu_name+'فلتر محدد',website0a,205)
+		addMenuItem('folder',menu_name+'فلتر كامل',website0a,204)
 		addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
 	#addMenuItem('folder',menu_name+'فلتر','',114,website0a)
-	response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',website0a,'',headers,True,'','ARABLIONZ-MENU-1st')
+	response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',website0a,'',headers,True,'','ARBLIONZ-MENU-1st')
 	html = response.content#.encode('utf8')
 	html_blocks = re.findall('categories-tabs(.*?)advanced-search',html,re.DOTALL)
 	if html_blocks:
@@ -36,6 +36,7 @@ def MENU(website=''):
 			link = website0a+'/getposts?type=one&data='+url
 			addMenuItem('folder',website+'___'+menu_name+title,link,201)
 		addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
+	#WRITE_FILE(html)
 	html_blocks = re.findall('navigation-menu(.*?)</div>',html,re.DOTALL)
 	block = html_blocks[0]
 	items = re.findall('href="(.*?)">(.*?)<',block,re.DOTALL)
@@ -49,7 +50,23 @@ def MENU(website=''):
 
 def TITLES(url):
 	#DIALOG_OK(url,'TITLES')
-	response = OPENURL_REQUESTS_CACHED(REGULAR_CACHE,'GET',url,'',headers,True,'','ARABLIONZ-TITLES-1st')
+	"""
+	# for POST filter:
+	if '/getposts?' in url:
+		url2,filters2 = url.split('?')
+		url2 = url2.replace('/getposts','/ajaxCenter?_action=AjaxFilteringData&_count=50')
+		#DIALOG_OK(url2,filters2)
+		data2 = {'form':filters2,'FilterWord=':''}
+		headers2 = headers
+		headers2['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+		headers2['X-Requested-With'] = 'XMLHttpRequest'
+		headers2['X-CSRF-TOKEN'] = 'GZ4Od0njTCaGwcGq4IzGqHErY0uZoaUXZC6HeXxx'
+		headers2['Cookie'] = 'warblionztv_session=eyJpdiI6ImR0MXNJYlRLQjdaNDkxVndGZ1B2YlE9PSIsInZhbHVlIjoiQTRRVXM1UjlGbFFraUFkOExEOUVQYU41d1NWeHcwenMyVWRFQml2UXI0dkxlZ1Bna3pXS1BWbTA3SmNjdFd3WCIsIm1hYyI6IjUxZTgyNmMyOGEyMjI0NDNlZjhlN2NkZTBmNjdmYzA0NjAwMTJkMzZjODIzNTYyMzk0NDc5MTBjNWIyOTljNjgifQ=='
+		response = OPENURL_REQUESTS_CACHED(REGULAR_CACHE,'POST',url2,data2,headers2,True,'','ARBLIONZ-TITLES-1st')
+		html = response.content#.encode('utf8')
+	else:
+	"""
+	response = OPENURL_REQUESTS_CACHED(REGULAR_CACHE,'GET',url,'',headers,True,'','ARBLIONZ-TITLES-2nd')
 	html = response.content#.encode('utf8')
 	if 'getposts' in url: block = html
 	else:
@@ -75,6 +92,8 @@ def TITLES(url):
 				if title not in allTitles:
 					addMenuItem('folder',menu_name+title,link,203,img)
 					allTitles.append(title)
+		elif '/pack/' in link:
+			addMenuItem('folder',menu_name+title,link+'/films',201,img)
 		else: addMenuItem('folder',menu_name+title,link,203,img)
 	html_blocks = re.findall('class="pagination(.*?)</div>',html,re.DOTALL)
 	if html_blocks:
@@ -92,8 +111,9 @@ def TITLES(url):
 	return
 
 def EPISODES(url):
+	#DIALOG_OK(url,'')
 	episodesCount,items,itemsNEW = -1,[],[]
-	response = OPENURL_REQUESTS_CACHED(REGULAR_CACHE,'GET',url,'',headers,True,'','ARABLIONZ-EPISODES-1st')
+	response = OPENURL_REQUESTS_CACHED(REGULAR_CACHE,'GET',url,'',headers,True,'','ARBLIONZ-EPISODES-1st')
 	html = response.content#.encode('utf8')
 	html_blocks = re.findall('ti-list-numbered(.*?)</div>',html,re.DOTALL)
 	if html_blocks:
@@ -135,7 +155,7 @@ def PLAY(url):
 	#DIALOG_OK(url,'PLAY-1st')
 	#url = unquote(quote(url))
 	hostname = website0a
-	response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url,'',headers,True,True,'ARABLIONZ-PLAY-1st')
+	response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url,'',headers,True,True,'ARBLIONZ-PLAY-1st')
 	html = response.content#.encode('utf8')
 	id = re.findall('postId:"(.*?)"',html,re.DOTALL)
 	if not id: id = re.findall('post_id=(.*?)"',html,re.DOTALL)
@@ -143,10 +163,10 @@ def PLAY(url):
 	if id: id = id[0]
 	else: DIALOG_OK('رسالة من المبرمج','يرجى إرسال هذه المشكلة إلى المبرمج  من قائمة خدمات البرنامج')
 	#LOG_THIS('NOTICE','EMAD START TIMING 111')
-	if True or '/watch/' in html:
+	if '/watch/' in html:
 		#parts = url.split('/')
 		url2 = url.replace(parts[3],'watch')
-		response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url2,'',headers,True,True,'ARABLIONZ-PLAY-2nd')
+		response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url2,'',headers,True,True,'ARBLIONZ-PLAY-2nd')
 		html2 = response.content#.encode('utf8')
 		items1 = re.findall('data-embedd="(.*?)".*?alt="(.*?)"',html2,re.DOTALL)
 		items2 = re.findall('data-embedd=".*?(http.*?)("|&quot;)',html2,re.DOTALL)
@@ -185,7 +205,7 @@ def PLAY(url):
 	if 'DownloadNow' in html:
 		headers2 = { 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8' }
 		url2 = url+'/download'
-		response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url2,'',headers2,True,'','ARABLIONZ-PLAY-3rd')
+		response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url2,'',headers2,True,'','ARBLIONZ-PLAY-3rd')
 		html2 = response.content#.encode('utf8')
 		#DIALOG_OK(url2,html2)
 		html_blocks = re.findall('<ul class="download-items(.*?)</ul>',html2,re.DOTALL)
@@ -197,7 +217,7 @@ def PLAY(url):
 	elif '/download/' in html:
 		headers2 = { 'User-Agent':'' , 'X-Requested-With':'XMLHttpRequest' }
 		url2 = hostname + '/ajaxCenter?_action=getdownloadlinks&postId='+id
-		response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url2,'',headers2,True,True,'ARABLIONZ-PLAY-4th')
+		response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url2,'',headers2,True,True,'ARBLIONZ-PLAY-4th')
 		html2 = response.content#.encode('utf8')
 		if 'download-btns' in html2:
 			items3 = re.findall('href="(.*?)"',html2,re.DOTALL)
@@ -207,7 +227,7 @@ def PLAY(url):
 					linkLIST.append(url3)
 				elif '/page/' in url3:
 					quality = ''
-					response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url3,'',headers,True,True,'ARABLIONZ-PLAY-5th')
+					response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',url3,'',headers,True,True,'ARBLIONZ-PLAY-5th')
 					html4 = response.content#.encode('utf8')
 					blocks = re.findall('(<strong>.*?)-----',html4,re.DOTALL)
 					for block4 in blocks:
@@ -274,7 +294,7 @@ def SEARCH(search):
 	if search=='': search = KEYBOARD()
 	if search=='': return
 	search = search.replace(' ','+')
-	response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',website0a,'',headers,True,'','ARABLIONZ-SEARCH-1st')
+	response = OPENURL_REQUESTS_CACHED(LONG_CACHE,'GET',website0a,'',headers,True,'','ARBLIONZ-SEARCH-1st')
 	html = response.content#.encode('utf8')
 	html_blocks = re.findall('chevron-select(.*?)</div>',html,re.DOTALL)
 	if showdialogs and html_blocks:
@@ -296,7 +316,8 @@ def SEARCH(search):
 def FILTERS_MENU(url,filter):
 	filter = filter.replace('_FORGETRESULTS_','')
 	#DIALOG_OK(filter,url)
-	menu_list = ['category','genre','release-year']
+	# for POST filter:		menu_list = ['CategoryCheckBox','YearCheckBox','GenreCheckBox','QualityCheckBox']
+	menu_list = ['category','release-year','genre','Quality']
 	if '?' in url: url = url.split('/getposts?')[0]
 	type,filter = filter.split('___',1)
 	if filter=='': filter_options,filter_values = '',''
@@ -319,15 +340,19 @@ def FILTERS_MENU(url,filter):
 		addMenuItem('folder',menu_name+'أظهار قائمة الفيديو التي تم اختيارها ',url2,201)
 		addMenuItem('folder',menu_name+' [[   '+filter_show+'   ]]',url2,201)
 		addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
-	html = OPENURL_CACHED(LONG_CACHE,url,'',headers,'','ARABLIONZ-FILTERS_MENU-1st')
-	html_blocks = re.findall('div class="form(.*?)class="row',html,re.DOTALL)
+	html = OPENURL_CACHED(LONG_CACHE,url,'',headers,'','ARBLIONZ-FILTERS_MENU-1st')
+	#DIALOG_TEXTVIEWER(url,html)
+	html_blocks = re.findall('AjaxFilteringData(.*?)FilterWord',html,re.DOTALL)
 	block = html_blocks[0]
-	select_blocks = re.findall('select.*?<a.*?>(.*?)</a>.*?data-tax="(.*?)"(.*?)</ul>',block,re.DOTALL)
+	# for POST filter:		select_blocks = re.findall('</i>(.*?)<.*?name="(.*?)"(.*?)<h2',block,re.DOTALL)
+	select_blocks = re.findall('</i>(.*?)<.*?data-forTax="(.*?)"(.*?)<h2',block,re.DOTALL)
 	#DIALOG_OK('',str(select_blocks))
 	dict = {}
 	for name,category2,block in select_blocks:
-		name = name.replace('--','')
-		items = re.findall('data-cat="(.*?)".*?checkmark-bold">(.*?)<',block,re.DOTALL)
+		#name = name.replace('--','')
+		name = name.replace('اختيار ','')
+		name = name.replace('سنة الإنتاج','السنة')
+		items = re.findall('value="(.*?)".*?</div>(.*?)<',block,re.DOTALL)
 		if '=' not in url2: url2 = url
 		if type=='CATEGORIES':
 			if category!=category2: continue
@@ -345,7 +370,11 @@ def FILTERS_MENU(url,filter):
 			addMenuItem('folder',menu_name+'الجميع :'+name,url2,204,'','',new_filter+'_FORGETRESULTS_')
 		dict[category2] = {}
 		for value,option in items:
+			option = option.replace('\n','')
 			if option in ignoreLIST: continue
+			#if option=='الكل': continue
+			#option = '['+option+']'
+			#if 'الكل' in option: DIALOG_OK('','['+str(option)+']')
 			#if 'value' not in value: value = option
 			#else: value = re.findall('"(.*?)"',value,re.DOTALL)[0]
 			dict[category2][value] = option
@@ -376,7 +405,8 @@ def RECONSTRUCT_FILTER(filters,mode):
 			var,value = item.split('=')
 			filtersDICT[var] = value
 	new_filters = ''
-	url_filter_list = ['quality','release-year','genre','category']
+	# for POST filter:		url_filter_list = ['CategoryCheckBox','YearCheckBox','GenreCheckBox','QualityCheckBox']
+	url_filter_list = ['category','release-year','genre','Quality']
 	for key in url_filter_list:
 		if key in filtersDICT.keys(): value = filtersDICT[key]
 		else: value = '0'
@@ -387,6 +417,26 @@ def RECONSTRUCT_FILTER(filters,mode):
 	new_filters = new_filters.strip(' + ')
 	new_filters = new_filters.strip('&')
 	new_filters = new_filters.replace('=0','=')
+	new_filters = new_filters.replace('Quality','quality')
 	#DIALOG_OK(filters,'RECONSTRUCT_FILTER 22')
 	return new_filters
+
+"""
+filters:	1st method		(used now in website)
+adding filter to search
+POST:	https://arblionz.art/ajaxCenter?_action=AjaxFilteringData&_count=50
+	data:	['CategoryCheckBox','YearCheckBox','GenreCheckBox','QualityCheckBox']
+	headers:	Cookie + XREF-TOKEN
+
+
+filters:	2nd method		(old method but still working)		(used in this program)
+GET:	https://arblionz.art/getposts?quality=WEB-DL&release-year=2020
+
+
+
+filters:	3rd method		(old method but still working)
+GET:	https://arblionz.art/release-year/2019
+GET:	https://arblionz.art/quality/4K%20BluRay
+"""
+
 
