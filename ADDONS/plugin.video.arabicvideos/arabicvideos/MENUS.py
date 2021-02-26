@@ -45,8 +45,8 @@ def MENU():
 	addMenuItem('folder','[COLOR FFC89008]16.  [/COLOR]'+'قائمة المفضلة 4','',270,'','','','4')
 	addMenuItem('folder','[COLOR FFC89008]17.  [/COLOR]'+'قائمة المفضلة 5','',270,'','','','5')
 	addMenuItem('folder','[COLOR FFC89008]18.  [/COLOR]'+'آخر 50 فيديو تم تشغيلها','',265,'','','video')
-	addMenuItem('folder','[COLOR FFC89008]19.  [/COLOR]'+'آخر 50 قناة تم تشغيلها','',265,'','','live')
-	addMenuItem('folder','[COLOR FFC89008]20.  [/COLOR]'+'آخر 50 مجلد تم فتحها','',265,'','','folder')
+	addMenuItem('folder','[COLOR FFC89008]19.  [/COLOR]'+'آخر 50 مجلد تم فتحها','',265,'','','folder')
+	addMenuItem('folder','[COLOR FFC89008]20.  [/COLOR]'+'آخر 50 قناة تم تشغيلها','',265,'','','live')
 	addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
 	addMenuItem('link','[COLOR FFC89008]21.  [/COLOR]'+'تقرير عن آخر التغييرات','',199)
 	addMenuItem('link','[COLOR FFC89008]22.  [/COLOR]البرنامج إصدار رقم ( '+addon_version+' )','',7)
@@ -102,25 +102,26 @@ def SERVICES_MENU():
 	addMenuItem('link','[COLOR FFC89008]  2.  [/COLOR]'+'مسح كاش البرنامج','',9)
 	addMenuItem('link','[COLOR FFC89008]  3.  [/COLOR]'+'تحديث جميع إضافات كودي','',159)
 	addMenuItem('link','[COLOR FFC89008]  4.  [/COLOR]'+'تغيير مكان تحميل الفيديوهات','',332)
-	addMenuItem('link','[COLOR FFC89008]  5.  [/COLOR]'+'إيقاف وتشغيل سيرفر DNS','',343)
-	addMenuItem('link','[COLOR FFC89008]  6.  [/COLOR]'+'إيقاف وتشغيل سيرفرات البروكسي','',342)
+	addMenuItem('link','[COLOR FFC89008]  5.  [/COLOR]'+'إيقاف وتشغيل الكاش','',345)
+	addMenuItem('link','[COLOR FFC89008]  6.  [/COLOR]'+'إيقاف وتشغيل سيرفر DNS','',343)
+	addMenuItem('link','[COLOR FFC89008]  7.  [/COLOR]'+'إيقاف وتشغيل سيرفرات البروكسي','',342)
 	addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
-	addMenuItem('link','[COLOR FFC89008]  7.  [/COLOR]'+'إرسال رسالة إلى المبرمج','',2,'','','')
-	addMenuItem('link','[COLOR FFC89008]  8.  [/COLOR]'+'إبلاغ المبرمج بوجود مشكلة','',2,'','','_PROBLEM_')
-	addMenuItem('link','[COLOR FFC89008]  9.  [/COLOR]'+'إرسال سجل الأخطاء والاستخدام','',2,'','','_PROBLEM_')
-	addMenuItem('link','[COLOR FFC89008]10.  [/COLOR]'+'قراءة سجل الأخطاء والاستخدام','',340)
+	addMenuItem('link','[COLOR FFC89008]  8.  [/COLOR]'+'إرسال رسالة إلى المبرمج','',2,'','','')
+	addMenuItem('link','[COLOR FFC89008]  9.  [/COLOR]'+'إبلاغ المبرمج بوجود مشكلة','',2,'','','_PROBLEM_')
+	addMenuItem('link','[COLOR FFC89008]10.  [/COLOR]'+'إرسال سجل الأخطاء والاستخدام','',2,'','','_PROBLEM_')
+	addMenuItem('link','[COLOR FFC89008]11.  [/COLOR]'+'قراءة سجل الأخطاء والاستخدام','',340)
 	addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
-	addMenuItem('link','[COLOR FFC89008]11.  [/COLOR]'+'فحص وتفعيل مخازن عماد','',172)
-	addMenuItem('link','[COLOR FFC89008]12.  [/COLOR]'+'فحص وتفعيل فيديوهات mpd','',173)
-	addMenuItem('link','[COLOR FFC89008]13.  [/COLOR]'+'فحص وتفعيل فيديوهات rtmp','',174)
-	addMenuItem('link','[COLOR FFC89008]14.  [/COLOR]'+'فحص الإصدار الأخير والتحديثات','',7)
-	addMenuItem('link','[COLOR FFC89008]15.  [/COLOR]'+'فحص اتصال المواقع المشفرة','',4)
+	addMenuItem('link','[COLOR FFC89008]12.  [/COLOR]'+'فحص وتفعيل مخازن عماد','',172)
+	addMenuItem('link','[COLOR FFC89008]13.  [/COLOR]'+'فحص وتفعيل فيديوهات mpd','',173)
+	addMenuItem('link','[COLOR FFC89008]14.  [/COLOR]'+'فحص وتفعيل فيديوهات rtmp','',174)
+	addMenuItem('link','[COLOR FFC89008]15.  [/COLOR]'+'فحص الإصدار الأخير والتحديثات','',7)
+	addMenuItem('link','[COLOR FFC89008]16.  [/COLOR]'+'فحص اتصال المواقع المشفرة','',4)
 	addMenuItem('link','[COLOR FFC89008]====================[/COLOR]','',9999)
-	addMenuItem('link','[COLOR FFC89008]16.  [/COLOR]'+'مسح إعدادات البرنامج','',344)
-	addMenuItem('link','[COLOR FFC89008]17.  [/COLOR]'+'إعدادات واجهة كودي','',6)
-	addMenuItem('link','[COLOR FFC89008]18.  [/COLOR]'+'إعدادات ResolveURL','',177)
-	addMenuItem('link','[COLOR FFC89008]19.  [/COLOR]'+'إعدادات Youtube-DL','',178)
-	addMenuItem('link','[COLOR FFC89008]20.  [/COLOR]'+'إعدادات Inputstream Adaptive','',5)
+	addMenuItem('link','[COLOR FFC89008]17.  [/COLOR]'+'مسح إعدادات البرنامج','',344)
+	addMenuItem('link','[COLOR FFC89008]18.  [/COLOR]'+'إعدادات واجهة كودي','',6)
+	addMenuItem('link','[COLOR FFC89008]19.  [/COLOR]'+'إعدادات ResolveURL','',177)
+	addMenuItem('link','[COLOR FFC89008]20.  [/COLOR]'+'إعدادات Youtube-DL','',178)
+	addMenuItem('link','[COLOR FFC89008]21.  [/COLOR]'+'إعدادات Inputstream Adaptive','',5)
 	return
 
 def ANSWERS_MENU():
@@ -132,7 +133,7 @@ def ANSWERS_MENU():
 	addMenuItem('link','[COLOR FFC89008]  5.  [/COLOR]'+'كيفية استخدام المفضلة','',150)
 	addMenuItem('link','[COLOR FFC89008]  6.  [/COLOR]'+'كيفية مسح محتويات قائمة','',170)
 	addMenuItem('link','[COLOR FFC89008]  7.  [/COLOR]'+'كيف تتصل وتتواصل مع المبرمج','',196)
-	addMenuItem('link','[COLOR FFC89008]  8.  [/COLOR]'+'ما هو الكاش وكم مقداره بالبرنامج','',190)
+	addMenuItem('link','[COLOR FFC89008]  8.  [/COLOR]'+'ما هو الكاش وكم عمره بالبرنامج','',190)
 	addMenuItem('link','[COLOR FFC89008]  9.  [/COLOR]'+'لماذا بعض الروابط بطيئة','',155)
 	addMenuItem('link','[COLOR FFC89008]10.  [/COLOR]'+'لماذا بعض الروابط لا تعمل','',153)
 	addMenuItem('link','[COLOR FFC89008]11.  [/COLOR]'+'لماذا المواقع المشفرة لا تعمل','',152)
@@ -231,8 +232,7 @@ def SHOW_MESSAGES(showDialogs):
 	color,privs = 'white',''
 	url = WEBSITES['PYTHON'][3]
 	payload = {'user':dummyClientID(32)}
-	allow_dns_fix = True
-	allow_proxy_fix = showDialogs
+	allow_dns_fix,allow_proxy_fix = showDialogs,showDialogs
 	response = OPENURL_REQUESTS_CACHED(SHORT_CACHE,'POST',url,payload,'','',False,'MENUS-SHOW_MESSAGES-1st',allow_dns_fix,allow_proxy_fix)
 	if not response.succeeded: return color
 	newfile = response.content

@@ -1,4 +1,35 @@
 ﻿
+v8.0.4	2021-02-11
+Added hostname to m3u8 extractor
+Added cache enable/disable
+Fixed list of sections
+Fixed colour of new messages
+Fixed ARABSEED empty play/download links
+Fixed DAILYMOTION unicode names
+Fixed very long log lines
+Fixed reading useragents file
+Updated useragents file
+Changed ARBLIONZ hostname
+Increased AKWAM timeout
+Modified cache deleting messages
+Decreased YOUTUBE cache time
+Minor fixes and improvements
+
+
+v8.0.3	2021-02-07
+Fixed ARBLIONZ url
+Fixed analytic events for pythonanywhere
+Modified analytic events proxy/dns
+Modified OPENURL logging
+Changed ARBLIONZ hostname
+Minor fixes and improvements
+
+
+v8.0.2	2021-02-06
+Fixed create/check cache folder
+Minor fixes and improvements
+
+
 v8.0.1	2021-02-06
 Added addon files update
 Fixed YOUTUBE lists & next page
